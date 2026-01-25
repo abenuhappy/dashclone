@@ -654,14 +654,24 @@ class Game {
         this.reset = this.reset.bind(this);
         this.loop = this.loop.bind(this);
 
+        // Input Handling - Bind to container to catch clicks on UI layers too
+        const container = document.getElementById('game-container');
+
+        const handleInteraction = (e) => {
+            // changes here 
+            if (e.target.closest('button')) return; // Ignore button clicks
+            if (e.type === 'touchstart') e.preventDefault(); // Prevent scrolling
+
+            this.handleInput();
+        };
+
         window.addEventListener('keydown', (e) => {
             if (e.code === 'Space') this.handleInput();
         });
-        canvas.addEventListener('mousedown', this.handleInput);
-        canvas.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            this.handleInput();
-        }, { passive: false });
+
+        // Mouse & Touch
+        container.addEventListener('mousedown', handleInteraction);
+        container.addEventListener('touchstart', handleInteraction, { passive: false });
 
         document.getElementById('btn-restart').addEventListener('click', this.reset);
         document.getElementById('btn-restart-victory').addEventListener('click', this.reset);
