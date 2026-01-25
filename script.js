@@ -689,29 +689,11 @@ class Game {
         document.getElementById('btn-restart').addEventListener('click', this.reset);
         document.getElementById('btn-restart-victory').addEventListener('click', this.reset);
 
-        this.btnSound = document.getElementById('btn-sound');
-        this.btnSound.addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.toggleSound();
-        });
-
         requestAnimationFrame(this.loop);
     }
 
-    toggleSound() {
-        this.soundManager.enabled = !this.soundManager.enabled;
-        this.btnSound.innerText = this.soundManager.enabled ? '🔊' : '🔇';
-
-        if (this.soundManager.enabled) {
-            if (this.soundManager.ctx.state === 'suspended') {
-                this.soundManager.ctx.resume();
-            }
-            if (this.state === 'playing' || this.state === 'countdown') {
-                this.soundManager.startBGM();
-            }
-        } else {
-            this.soundManager.stopBGM();
-        }
+    reset() {
+        location.reload();
     }
 
     initFloor() {
