@@ -658,9 +658,22 @@ class Game {
         const container = document.getElementById('game-container');
 
         const handleInteraction = (e) => {
-            // changes here 
             if (e.target.closest('button')) return; // Ignore button clicks
             if (e.type === 'touchstart') e.preventDefault(); // Prevent scrolling
+
+            // Mobile Audio Unlock
+            if (this.soundManager.ctx.state === 'suspended') {
+                this.soundManager.ctx.resume().then(() => {
+                    // Force a silent note to wake up the audio engine fully (iOS fix)
+                    const osc = this.soundManager.ctx.createOscillator();
+                    const gain = this.soundManager.ctx.createGain();
+                    gain.gain.value = 0;
+                    osc.connect(gain);
+                    gain.connect(this.soundManager.ctx.destination);
+                    osc.start();
+                    osc.stop(this.soundManager.ctx.currentTime + 0.01);
+                });
+            }
 
             this.handleInput();
         };
