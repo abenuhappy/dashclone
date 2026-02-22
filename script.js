@@ -1061,8 +1061,16 @@ class Game {
             // If player's bottom is significantly lower than the ground height at their front face -> crash
             if (!this.gravityInverted && pBottom > gFront + 5 && this.player.y < gFront) {
                 // Hit a wall
-                this.soundManager.play('die');
-                this.gameOver();
+                if (this.player.shieldCount > 0) {
+                    this.player.shieldCount--;
+                    this.soundManager.play('shield');
+                    this.player.y = gFront - this.player.h;
+                    this.player.vy = 0;
+                    this.player.isGrounded = true;
+                } else {
+                    this.soundManager.play('die');
+                    this.gameOver();
+                }
             }
             if (this.gravityInverted) {
                 // Cieling collision if needed
